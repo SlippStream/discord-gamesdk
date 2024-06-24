@@ -1,0 +1,22 @@
+{
+  "name": "discord-gamesdk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "cmake-js compile",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && node dist/core.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.5",
+    "cmake-js": "^7.3.0",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
