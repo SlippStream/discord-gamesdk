@@ -8,14 +8,13 @@ include_directories(${CMAKE_JS_INC} include "./")
 
 file(GLOB SOURCE_FILES "include/*.h" "include/*.cpp" "src/backend/*.cpp" "src/backend/*.h")
 
-add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${CMAKE_JS_SRC})
+add_library(${PROJECT_NAME} MODULE ${SOURCE_FILES} ${CMAKE_JS_SRC})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "" SUFFIX ".node")
 
 find_library(DISCORD_GAME_SDK 
 NAMES discord_game_sdk discord_game_sdk.dll
-HINTS ${CMAKE_SOURCE_DIR}
-PATH_SUFFIXES lib
+HINTS ${CMAKE_SOURCE_DIR} ./lib ./
 REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} ${CMAKE_JS_LIB})

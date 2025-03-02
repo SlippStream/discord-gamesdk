@@ -1,30 +1,15 @@
-import { error } from "console";
-import { updateActivity } from "./activity";
-
 /**
  * NOT FOR API USE
  */
-export let _Discord: any;
-try{
-    _Discord = require("@discord");
-} catch(e) {
-    throw new Error(e + "\nDo you have discord_game_sdk.dll in your project root folder?");
-}
-
-export const version = _Discord.getVersion();
+export declare let _Discord: any;
+export declare const version: any;
 /**
  * NOT FOR API USE
  */
-export let _debug = false;
-export function runCallbacks(): void {
-    _Discord.runCallbacks();
-}
-
-export function create(clientId: bigint, createFlags: CreateFlags = CreateFlags.Default): Result {
-    return _Discord.discordCreate(clientId, createFlags);
-}
-
-export enum Result {
+export declare let _debug: boolean;
+export declare function runCallbacks(): void;
+export declare function create(clientId: bigint, createFlags?: CreateFlags): Result;
+export declare enum Result {
     Ok = 0,
     ServiceUnavailable = 1,
     InvalidVersion = 2,
@@ -69,20 +54,9 @@ export enum Result {
     InvalidGiftCode = 41,
     PurchaseError = 42,
     TransactionAborted = 43,
-    DrawingInitFailed = 44,
+    DrawingInitFailed = 44
 }
-
-export enum CreateFlags {
+export declare enum CreateFlags {
     Default = 0,
-    NoRequireDiscord = 1,
+    NoRequireDiscord = 1
 }
-
-
-create(1248068953184534549n, 0);
-updateActivity({
-    state: "help",
-    details: "testing :)"
-});
-setInterval(() => {
-    runCallbacks();
-}, 1000/60);

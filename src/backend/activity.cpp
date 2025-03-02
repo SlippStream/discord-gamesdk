@@ -7,14 +7,15 @@
 void Activity::updateActivityWrapped(Napi::CallbackInfo const &info)
 {
     auto env = info.Env();
+    std::cout << 1;
 
     if (info.Length() < 1)
         throw ERROR_BAD_ARGUMENTS;
-
+    std::cout << 2;
     assert(info[0].IsObject());
-
-    discord::Activity activity = *Activity::parseActivityFromObject(&info[0].As<Napi::Object>());
-
+    std::cout << 3;
+    discord::Activity activity = *Activity::unwrapActivityObject(&info[0].As<Napi::Object>());
+    std::cout << 4;
     core->ActivityManager().UpdateActivity(
         activity,
         [&info](discord::Result res)
@@ -27,15 +28,10 @@ void Activity::updateActivityWrapped(Napi::CallbackInfo const &info)
         });
 }
 
-Napi::Object Activity::Init(Napi::Env env, Napi::Object exports)
-{
-    exports.Set("updateActivity", Napi::Function::New(env, Activity::updateActivityWrapped));
-    return exports;
-}
-
-discord::Activity *Activity::parseActivityFromObject(Napi::Object *obj)
+discord::Activity *Activity::unwrapActivityObject(Napi::Object *obj)
 {
     auto activity = new discord::Activity();
+    bool lossless = false;
     if (obj->Has("state"))
         activity->SetState(obj->Get("state").As<Napi::String>().Utf8Value().c_str());
 
@@ -63,9 +59,9 @@ discord::Activity *Activity::parseActivityFromObject(Napi::Object *obj)
         auto newTimestamps = obj->Get("timestamps").As<Napi::Object>();
         auto d_timestamps = activity->GetTimestamps();
         if (newTimestamps.Has("start"))
-            d_timestamps.SetStart(newTimestamps.Get("start").As<Napi::Number>().Int64Value());
+            d_timestamps.SetStart(newTimestamps.Get("start").As<Napi::BigInt>().Int64Value(&lossless));
         if (newTimestamps.Has("end"))
-            d_timestamps.SetEnd(newTimestamps.Get("end").As<Napi::Number>().Int64Value());
+            d_timestamps.SetEnd(newTimestamps.Get("end").As<Napi::BigInt>().Int64Value(&lossless));
     }
 
     if (obj->Has("party"))
@@ -97,4 +93,14 @@ discord::Activity *Activity::parseActivityFromObject(Napi::Object *obj)
     }
 
     return activity;
+}
+
+Napi::Object Activity::Init(Napi::Env env, Napi::Object obj)
+{
+    std::cout << "Initializing Activity...\n";
+    auto help = Napi::Function::New(env, Activity::updateActivityWrapped);
+    std::cout << ":((\n";
+    obj.Set("updateActivity", help);
+    std::cout << "Activity Init Successful!\n";
+    return obj;
 }
