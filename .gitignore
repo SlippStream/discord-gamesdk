@@ -2,3 +2,5 @@
 build/
 node_modules/
 lib/
+
+discord_game_sdk.dll
